@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - ShopHub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🛍️</span>
+                ShopHub
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link">Shop</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="products.html" class="nav-icon" title="Search">🔍</a>
+                <a href="cart.html" class="nav-icon cart-icon" title="Cart">
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="#" class="nav-icon" title="Account">👤</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container" style="padding: 40px 0;">
+        <h1 class="page-title">Shop All Products</h1>
+
+        <!-- Filters Bar -->
+        <div class="filters-bar">
+            <div class="filter-group">
+                <label for="search-input">Search:</label>
+                <input type="text" id="search-input" placeholder="Search products...">
+            </div>
+            <div class="filter-group">
+                <label for="filter-category">Category:</label>
+                <select id="filter-category">
+                    <option value="">All Categories</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Fashion">Fashion</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Footwear">Footwear</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="filter-price">Max Price: $<span id="price-value">500</span></label>
+                <input type="range" id="filter-price" min="0" max="500" value="500" style="width: 150px;">
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="products-grid">
+            <!-- Products will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>About Us</h4>
+                    <p>ShopHub is your one-stop destination for premium products with exceptional customer service.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Shop</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">Track Order</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#">Facebook</a>
+                        <a href="#">Instagram</a>
+                        <a href="#">Twitter</a>
+                        <a href="#">Pinterest</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ShopHub. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Update price display
+        const priceInput = document.getElementById('filter-price');
+        const priceValue = document.getElementById('price-value');
+        
+        if (priceInput) {
+            priceInput.addEventListener('input', (e) => {
+                priceValue.textContent = e.target.value;
+            });
+        }
+    </script>
+</body>
+</html>

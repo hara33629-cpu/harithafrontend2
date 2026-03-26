@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - ShopHub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🛍️</span>
+                ShopHub
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link">Shop</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="products.html" class="nav-icon" title="Search">🔍</a>
+                <a href="cart.html" class="nav-icon cart-icon" title="Cart">
+                    🛒
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="#" class="nav-icon" title="Account">👤</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container" style="padding: 40px 0;">
+        <h1 class="page-title">Checkout</h1>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+            <!-- Checkout Form -->
+            <form id="checkout-form" class="checkout-form">
+                <!-- Billing Information -->
+                <div class="form-section">
+                    <h3 style="margin-bottom: 20px; color: #2d3436;">Billing Information</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                </div>
+
+                <!-- Shipping Information -->
+                <div class="form-section">
+                    <h3 style="margin-bottom: 20px; color: #2d3436;">Shipping Address</h3>
+                    
+                    <div class="form-group">
+                        <label for="address">Street Address *</label>
+                        <input type="text" id="address" name="address" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City *</label>
+                            <input type="text" id="city" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State/Province</label>
+                            <input type="text" id="state" name="state">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="zip">Zip Code *</label>
+                            <input type="text" id="zip" name="zip" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="country">Country *</label>
+                            <input type="text" id="country" name="country" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="same-billing" style="width: auto; cursor: pointer;">
+                        <label for="same-billing" style="margin: 0; cursor: pointer;">Billing address same as shipping</label>
+                    </div>
+                </div>
+
+                <!-- Shipping Method -->
+                <div class="form-section">
+                    <h3 style="margin-bottom: 20px; color: #2d3436;">Shipping Method</h3>
+                    
+                    <div class="shipping-option">
+                        <input type="radio" id="standard" name="shipping" value="standard" checked>
+                        <label for="standard" style="margin: 0; cursor: pointer;">
+                            <strong>Standard Shipping</strong> - 5-7 business days ($10.00)
+                        </label>
+                    </div>
+
+                    <div class="shipping-option">
+                        <input type="radio" id="express" name="shipping" value="express">
+                        <label for="express" style="margin: 0; cursor: pointer;">
+                            <strong>Express Shipping</strong> - 2-3 business days ($25.00)
+                        </label>
+                    </div>
+
+                    <div class="shipping-option">
+                        <input type="radio" id="overnight" name="shipping" value="overnight">
+                        <label for="overnight" style="margin: 0; cursor: pointer;">
+                            <strong>Overnight Shipping</strong> - Next day delivery ($50.00)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Payment Information -->
+                <div class="form-section">
+                    <h3 style="margin-bottom: 20px; color: #2d3436;">Payment Methods</h3>
+                    
+                    <div class="payment-option">
+                        <input type="radio" id="credit-card" name="payment" value="credit-card" checked>
+                        <label for="credit-card" style="margin: 0; cursor: pointer;">
+                            <strong>Credit/Debit Card</strong> 💳
+                        </label>
+                    </div>
+
+                    <div class="payment-option">
+                        <input type="radio" id="paypal" name="payment" value="paypal">
+                        <label for="paypal" style="margin: 0; cursor: pointer;">
+                            <strong>PayPal</strong> 🅿️
+                        </label>
+                    </div>
+
+                    <div class="payment-option">
+                        <input type="radio" id="apple-pay" name="payment" value="apple-pay">
+                        <label for="apple-pay" style="margin: 0; cursor: pointer;">
+                            <strong>Apple Pay</strong> 🍎
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Terms & Conditions -->
+                <div class="form-section">
+                    <div class="form-group" style="display: flex; align-items: flex-start; gap: 10px;">
+                        <input type="checkbox" id="terms" name="terms" required style="width: auto; cursor: pointer; margin-top: 3px;">
+                        <label for="terms" style="margin: 0; cursor: pointer;">
+                            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> *
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" style="padding: 15px; font-size: 16px; margin-top: 20px;">
+                    Complete Purchase
+                </button>
+            </form>
+
+            <!-- Order Summary -->
+            <div id="order-summary" class="order-summary">
+                <!-- Summary will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>About Us</h4>
+                    <p>ShopHub is your one-stop destination for premium products with exceptional customer service.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Shop</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">Track Order</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#">Facebook</a>
+                        <a href="#">Instagram</a>
+                        <a href="#">Twitter</a>
+                        <a href="#">Pinterest</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ShopHub. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .checkout-form {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .form-section {
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .shipping-option,
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .shipping-option:hover,
+        .payment-option:hover {
+            border-color: var(--primary-color);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .shipping-option input,
+        .payment-option input {
+            margin-right: 15px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .order-summary {
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: 10px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .order-summary h3 {
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid white;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .item-qty {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .item-price {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .summary-divider {
+            border-top: 2px solid white;
+            margin: 15px 0;
+            padding-top: 15px;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .checkout-form {
+                grid-column: 1 / -1;
+            }
+
+            .order-summary {
+                position: relative;
+                top: auto;
+            }
+        }
+    </style>
+
+    <script src="script.js"></script>
+    <script>
+        // Display order summary
+        function displayOrderSummary() {
+            const cart = cartManager.getCart();
+            const summaryEl = document.getElementById('order-summary');
+
+            if (cart.length === 0) {
+                summaryEl.innerHTML = `
+                    <h3>Order Summary</h3>
+                    <p>Your cart is empty. <a href="products.html">Continue shopping</a></p>
+                `;
+                document.getElementById('checkout-form').style.display = 'none';
+                return;
+            }
+
+            const subtotal = cartManager.getTotalPrice();
+            const tax = subtotal * 0.1;
+            const shipping = subtotal > 50 ? 0 : 10;
+            const total = subtotal + tax + shipping;
+
+            let html = '<h3>Order Summary</h3>';
+            cart.forEach(item => {
+                html += `
+                    <div class="summary-item">
+                        <div>
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-qty">Qty: ${item.quantity}</div>
+                        </div>
+                        <div class="item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                <div class="summary-divider"></div>
+                <div class="summary-item">
+                    <span>Subtotal:</span>
+                    <span>$${subtotal.toFixed(2)}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Tax (10%):</span>
+                    <span>$${tax.toFixed(2)}</span>
+                </div>
+                <div class="summary-item">
+                    <span>Shipping:</span>
+                    <span>$${shipping.toFixed(2)}</span>
+                </div>
+                <div class="summary-item summary-total">
+                    <span>Total:</span>
+                    <span>$${total.toFixed(2)}</span>
+                </div>
+            `;
+
+            summaryEl.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', displayOrderSummary);
+    </script>
+</body>
+</html>
