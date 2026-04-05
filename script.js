@@ -1,8 +1,17 @@
+const API_BASE = "https://dos-backend-ly3a.onrender.com";
+
+function generateUserId() {
+    const id = "user-" + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("user_id", id);
+    return id;
+}
+
 // ===== Cart Management =====
 const STORAGE_KEY = 'shophub_cart';
 
 class CartManager {
     constructor() {
+        this.API_BASE = API_BASE; // change if deployed
         this.init();
     }
 
@@ -22,7 +31,47 @@ class CartManager {
         this.updateCartCount();
     }
 
-    addToCart(id, name, price) {
+    // 🔥 NEW: Send request to backend (DoS detection)
+    async sendToBackend(methodType, action) {
+        try {
+            const res = await fetch(`${this.API_BASE}/predict`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    ip: localStorage.getItem("user_id") || generateUserId(),
+                    method: methodType,
+                    user_agent: navigator.userAgent,
+                    request_size: JSON.stringify({ methodType, action }).length,
+                    timestamp: Date.now() / 1000
+                })
+            });
+
+            const result = await res.json();
+
+            // 🚨 If blocked
+            if (result.decision === "BLOCK") {
+                this.showNotification("⚠️ Too many requests! You are temporarily blocked.");
+                return false;
+            }
+
+            return true;
+
+        } catch (err) {
+            console.error("Backend error:", err);
+            this.showNotification("server error. Try again Later");
+            return false; // allow UI if backend fails
+        }
+    }
+
+    // ===== UPDATED FUNCTIONS =====
+
+    async addToCart(id, name, price) {
+
+        const allowed = await this.sendToBackend("POST", "add_to_cart");
+        if (!allowed) return;
+
         const existingItem = this.cart.find(item => item.id === id);
 
         if (existingItem) {
@@ -40,19 +89,31 @@ class CartManager {
         this.showNotification(`${name} added to cart!`);
     }
 
-    removeFromCart(id) {
+    async removeFromCart(id) {
+
+        const allowed = await this.sendToBackend("DELETE", "remove_item");
+        if (!allowed) return;
+
         this.cart = this.cart.filter(item => item.id !== id);
         this.saveCart();
         location.reload();
     }
 
-    updateQuantity(id, quantity) {
+    async updateQuantity(id, quantity) {
+
+        const allowed = await this.sendToBackend("PUT", "update_quantity");
+        if (!allowed) return;
+
         const item = this.cart.find(item => item.id === id);
+
         if (item) {
-            item.quantity = Math.max(1, parseInt(quantity));
+            const qty = parseInt(quantity);
+            item.quantity = isNaN(qty) ? 1 : Math.max(1, qty);
             this.saveCart();
         }
     }
+
+    // ===== REMAINING SAME =====
 
     getCart() {
         return this.cart;
@@ -72,9 +133,8 @@ class CartManager {
     }
 
     attachEventListeners() {
-        // Add to cart buttons
         document.querySelectorAll('.add-to-cart').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.onclick = () => {
                 const id = btn.dataset.id;
                 const name = btn.dataset.name;
                 const price = btn.dataset.price;
@@ -91,11 +151,8 @@ class CartManager {
     }
 
     showNotification(message) {
-        // Remove existing notification
         const existing = document.querySelector('.notification');
-        if (existing) {
-            existing.remove();
-        }
+        if (existing) existing.remove();
 
         const notification = document.createElement('div');
         notification.className = 'notification';
@@ -108,17 +165,12 @@ class CartManager {
             color: white;
             padding: 15px 25px;
             border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
             z-index: 1000;
-            animation: slideIn 0.3s ease;
         `;
 
         document.body.appendChild(notification);
 
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
+        setTimeout(() => notification.remove(), 3000);
     }
 }
 
@@ -380,31 +432,40 @@ function initCheckoutPage() {
     const checkoutForm = document.getElementById('checkout-form');
     if (!checkoutForm) return;
 
-    checkoutForm.addEventListener('submit', (e) => {
+    checkoutForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const formData = new FormData(checkoutForm);
         const data = Object.fromEntries(formData);
 
-        // Validate form
+        // ✅ Validate form
         if (!data.firstName || !data.email || !data.address) {
             cartManager.showNotification('Please fill in all required fields');
             return;
         }
 
-        // Simulate order processing
+        // 🔥 SEND TO BACKEND (DoS detection)
+        const allowed = await cartManager.sendToBackend("POST", "checkout");
+
+        if (!allowed) {
+            cartManager.showNotification("⚠️ Too many checkout attempts! Try again later.");
+            return;
+        }
+
+        // ✅ Simulate order processing
         cartManager.showNotification('Processing your order...');
 
         setTimeout(() => {
             cartManager.clearCart();
             cartManager.showNotification('Order placed successfully!');
+
             setTimeout(() => {
                 location.href = 'index.html';
             }, 3000);
+
         }, 2000);
     });
 }
-
 // ===== Initialize pages on load =====
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('cart-items')) {
