@@ -45,7 +45,7 @@ class CartManager {
 
             // Only attach body for non-GET
             if (methodType !== "GET") {
-                options.body = JSON.stringify({ action });
+                 options.body = JSON.stringify({ action, item });
             }
 
             const res = await fetch(`${this.API_BASE}/`, options);
@@ -74,7 +74,7 @@ class CartManager {
     // ===== UPDATED FUNCTIONS =====
 
     async addToCart(id, name, price) {
-        const allowed = await this.sendToBackend("POST", "add_to_cart");
+        const allowed = await this.sendToBackend("POST", "add_to_cart", { id, name, price });
         if (!allowed) return;
 
         const existingItem = this.cart.find(item => item.id === id);
