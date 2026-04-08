@@ -1,10 +1,12 @@
-```javascript
 const API_BASE = "https://dos-backend-ly3a.onrender.com";
 
 // ===== Generate User ID =====
 function generateUserId() {
-    const id = "user-" + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem("user_id", id);
+    let id = localStorage.getItem("user_id");
+    if (!id) {
+        id = "user-" + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem("user_id", id);
+    }
     return id;
 }
 
@@ -14,6 +16,7 @@ const STORAGE_KEY = 'shophub_cart';
 class CartManager {
     constructor() {
         this.API_BASE = API_BASE;
+        this.cart = [];
         this.init();
     }
 
@@ -33,8 +36,8 @@ class CartManager {
         this.updateCartCount();
     }
 
-    // 🔥 FIXED: Backend Connection
-    async sendToBackend(methodType, action) {
+    // ✅ FIXED BACKEND FUNCTION
+    async sendToBackend(methodType, action, item = null) {
         try {
             const options = {
                 method: methodType,
@@ -43,9 +46,12 @@ class CartManager {
                 }
             };
 
-            // Only attach body for non-GET
             if (methodType !== "GET") {
-                 options.body = JSON.stringify({ action, item });
+                options.body = JSON.stringify({
+                    user_id: generateUserId(),
+                    action: action,
+                    item: item
+                });
             }
 
             const res = await fetch(`${this.API_BASE}/`, options);
@@ -71,13 +77,14 @@ class CartManager {
         }
     }
 
-    // ===== UPDATED FUNCTIONS =====
-
+    // ===== ADD TO CART =====
     async addToCart(id, name, price) {
-        const allowed = await this.sendToBackend("POST", "add_to_cart", { id, name, price });
+        const item = { id, name, price };
+
+        const allowed = await this.sendToBackend("POST", "add_to_cart", item);
         if (!allowed) return;
 
-        const existingItem = this.cart.find(item => item.id === id);
+        const existingItem = this.cart.find(i => i.id === id);
 
         if (existingItem) {
             existingItem.quantity += 1;
@@ -94,8 +101,9 @@ class CartManager {
         this.showNotification(`${name} added to cart!`);
     }
 
+    // ===== REMOVE =====
     async removeFromCart(id) {
-        const allowed = await this.sendToBackend("DELETE", "remove_item");
+        const allowed = await this.sendToBackend("DELETE", "remove_item", { id });
         if (!allowed) return;
 
         this.cart = this.cart.filter(item => item.id !== id);
@@ -103,8 +111,9 @@ class CartManager {
         location.reload();
     }
 
+    // ===== UPDATE =====
     async updateQuantity(id, quantity) {
-        const allowed = await this.sendToBackend("PUT", "update_quantity");
+        const allowed = await this.sendToBackend("PUT", "update_quantity", { id, quantity });
         if (!allowed) return;
 
         const item = this.cart.find(item => item.id === id);
@@ -133,14 +142,18 @@ class CartManager {
         return this.cart.reduce((t, i) => t + i.quantity, 0);
     }
 
+    // ✅ FIXED EVENT LISTENER
     attachEventListeners() {
-        document.querySelectorAll('.add-to-cart').forEach(btn => {
-            btn.onclick = () => {
+        document.addEventListener("click", (e) => {
+            if (e.target.classList.contains("add-to-cart")) {
+                const btn = e.target;
+
                 const id = btn.dataset.id;
                 const name = btn.dataset.name;
                 const price = btn.dataset.price;
+
                 this.addToCart(id, name, price);
-            };
+            }
         });
     }
 
@@ -156,6 +169,7 @@ class CartManager {
         const n = document.createElement('div');
         n.className = 'notification';
         n.textContent = message;
+
         n.style.cssText = `
             position: fixed;
             top: 20px;
@@ -187,6 +201,7 @@ function initCheckoutPage() {
         if (!allowed) return;
 
         cartManager.showNotification('Processing...');
+
         setTimeout(() => {
             cartManager.clearCart();
             cartManager.showNotification('Order placed!');
@@ -199,4 +214,3 @@ function initCheckoutPage() {
 document.addEventListener('DOMContentLoaded', () => {
     initCheckoutPage();
 });
-```
