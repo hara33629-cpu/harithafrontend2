@@ -35,6 +35,13 @@ class CartManager {
         this.updateCartCount();
     }
 
+    // ✅ FIX: Added missing function
+    clearCart() {
+        this.cart = [];
+        localStorage.removeItem(STORAGE_KEY);
+        this.updateCartCount();
+    }
+
     // ===== BACKEND =====
     async sendToBackend(methodType, action, item = null) {
         try {
@@ -130,7 +137,9 @@ class CartManager {
 
     // ===== EVENT LISTENER =====
     attachEventListeners() {
-        document.addEventListener("click", (e) => {
+        document.addEventListener("click", async (e) => {
+
+            // ADD TO CART
             if (e.target.classList.contains("add-to-cart")) {
                 const btn = e.target;
 
@@ -140,6 +149,19 @@ class CartManager {
 
                 this.addToCart(id, name, price);
             }
+
+            // REMOVE ITEM
+            if (e.target.classList.contains("remove-item")) {
+                const id = e.target.dataset.id;
+                this.removeFromCart(id);
+            }
+        });
+
+        // PAGE VIEW LOG
+        window.addEventListener("load", async () => {
+            await this.sendToBackend("POST", "PAGE_VIEW", {
+                page: window.location.pathname
+            });
         });
     }
 
@@ -180,6 +202,18 @@ document.addEventListener('DOMContentLoaded', () => {
     cartManager.init();
 
     initCheckoutPage();
+});
+
+// 🔥 PAGE LEAVE LOG (FIXED)
+window.addEventListener("beforeunload", () => {
+    navigator.sendBeacon(
+        `${API_BASE}/`,
+        new Blob([JSON.stringify({
+            user_id: generateUserId(),
+            action: "PAGE_LEAVE",
+            item: { page: window.location.pathname }
+        })], { type: "application/json" })
+    );
 });
 
 // ===== CHECKOUT =====
