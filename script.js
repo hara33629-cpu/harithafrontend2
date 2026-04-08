@@ -1,4 +1,3 @@
-alert("JS WORKING");
 const API_BASE = "https://dos-backend-ly3a.onrender.com";
 
 // ===== Generate User ID =====
@@ -18,7 +17,6 @@ class CartManager {
     constructor() {
         this.API_BASE = API_BASE;
         this.cart = [];
-        this.init();
     }
 
     init() {
@@ -37,7 +35,7 @@ class CartManager {
         this.updateCartCount();
     }
 
-    // ✅ FIXED BACKEND FUNCTION
+    // ===== BACKEND =====
     async sendToBackend(methodType, action, item = null) {
         try {
             const options = {
@@ -58,22 +56,22 @@ class CartManager {
             const res = await fetch(`${this.API_BASE}/`, options);
             const result = await res.json();
 
-            console.log("🔍 Backend Response:", result);
+            console.log("Backend:", result);
 
             if (result.decision === "BLOCK") {
-                this.showNotification("🚫 Blocked by security system!");
+                this.showNotification("🚫 Blocked!");
                 return false;
             }
 
             if (result.decision === "SUSPICIOUS") {
-                this.showNotification("⚠️ Suspicious activity detected!");
+                this.showNotification("⚠️ Suspicious activity!");
             }
 
             return true;
 
         } catch (err) {
-            console.error("❌ Backend error:", err);
-            this.showNotification("Server error. Try again later.");
+            console.error("Backend error:", err);
+            this.showNotification("Server error!");
             return false;
         }
     }
@@ -91,8 +89,8 @@ class CartManager {
             existingItem.quantity += 1;
         } else {
             this.cart.push({
-                id: id,
-                name: name,
+                id,
+                name,
                 price: parseFloat(price),
                 quantity: 1
             });
@@ -126,24 +124,11 @@ class CartManager {
         }
     }
 
-    getCart() {
-        return this.cart;
-    }
-
-    clearCart() {
-        this.cart = [];
-        this.saveCart();
-    }
-
-    getTotalPrice() {
-        return this.cart.reduce((t, i) => t + (i.price * i.quantity), 0);
-    }
-
     getTotalItems() {
         return this.cart.reduce((t, i) => t + i.quantity, 0);
     }
 
-    // ✅ FIXED EVENT LISTENER
+    // ===== EVENT LISTENER =====
     attachEventListeners() {
         document.addEventListener("click", (e) => {
             if (e.target.classList.contains("add-to-cart")) {
@@ -187,8 +172,15 @@ class CartManager {
     }
 }
 
-// ===== INIT =====
-const cartManager = new CartManager();
+// ===== INIT AFTER PAGE LOAD =====
+let cartManager;
+
+document.addEventListener('DOMContentLoaded', () => {
+    cartManager = new CartManager();
+    cartManager.init();
+
+    initCheckoutPage();
+});
 
 // ===== CHECKOUT =====
 function initCheckoutPage() {
@@ -210,8 +202,3 @@ function initCheckoutPage() {
         }, 1500);
     });
 }
-
-// ===== PAGE INIT =====
-document.addEventListener('DOMContentLoaded', () => {
-    initCheckoutPage();
-});
