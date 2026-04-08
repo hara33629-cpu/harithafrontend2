@@ -80,7 +80,7 @@ class CartManager {
     async addToCart(id, name, price) {
         const item = { id, name, price };
 
-        const allowed = await this.sendToBackend("POST", "add_to_cart", item);
+        const allowed = await this.sendToBackend("POST", "ADD", item);
         if (!allowed) return;
 
         const existingItem = this.cart.find(i => i.id === id);
@@ -102,7 +102,7 @@ class CartManager {
 
     // ===== REMOVE =====
     async removeFromCart(id) {
-        const allowed = await this.sendToBackend("DELETE", "remove_item", { id });
+        const allowed = await this.sendToBackend("DELETE", "DELETE", { id });
         if (!allowed) return;
 
         this.cart = this.cart.filter(item => item.id !== id);
@@ -112,7 +112,7 @@ class CartManager {
 
     // ===== UPDATE =====
     async updateQuantity(id, quantity) {
-        const allowed = await this.sendToBackend("PUT", "update_quantity", { id, quantity });
+        const allowed = await this.sendToBackend("PUT", "UPDATE", { id, quantity });
         if (!allowed) return;
 
         const item = this.cart.find(item => item.id === id);
@@ -190,7 +190,7 @@ function initCheckoutPage() {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const allowed = await cartManager.sendToBackend("POST", "checkout");
+        const allowed = await cartManager.sendToBackend("POST", "CHECKOUT");
         if (!allowed) return;
 
         cartManager.showNotification('Processing...');
