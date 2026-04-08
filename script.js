@@ -1,3 +1,4 @@
+alert("JS WORKING");
 const API_BASE = "https://dos-backend-ly3a.onrender.com";
 
 // ===== Generate User ID =====
